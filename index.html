@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz App</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(45deg, #4158D0, #C850C0, #FFCC70);
+            background-size: 400% 400%;
+            animation: gradientBG 10s ease infinite;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #fff;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .quiz-container {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 20px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .quiz-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .quiz-header h1 {
+            margin: 0;
+        }
+
+        .question {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+
+        .answers {
+            list-style: none;
+            padding: 0;
+        }
+
+        .answers li {
+            margin-bottom: 10px;
+        }
+
+        .answers button {
+            width: 100%;
+            padding: 10px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background: #C850C0;
+            color: #fff;
+            transition: background 0.3s;
+        }
+
+        .answers button:hover {
+            background: #FFCC70;
+        }
+
+        .result {
+            text-align: center;
+            font-size: 1.2rem;
+            margin-top: 20px;
+        }
+
+        .result span {
+            font-weight: bold;
+        }
+
+        .retry-btn {
+            display: block;
+            margin: 20px auto 0;
+            padding: 10px 20px;
+            font-size: 1rem;
+            background: #4158D0;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .retry-btn:hover {
+            background: #C850C0;
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <div class="quiz-header">
+            <h1>Quiz App</h1>
+        </div>
+        <div id="quiz">
+            <!-- Quiz content will be injected here -->
+        </div>
+        <button id="retry" class="retry-btn" style="display:none;">Retry</button>
+    </div>
+
+    <script>
+        const quizData = [
+            {
+                question: "What does HTML stand for?",
+                options: [
+                    "Hypertext Markup Language",
+                    "Hyperlinks and Text Markup Language",
+                    "Home Tool Markup Language",
+                    "High-Level Text Markup Language"
+                ],
+                correct: 0
+            },
+            {
+                question: "Which CSS property is used to change text color?",
+                options: [
+                    "color",
+                    "font-color",
+                    "text-color",
+                    "background-color"
+                ],
+                correct: 0
+            },
+            {
+                question: "What does DOM stand for?",
+                options: [
+                    "Document Object Model",
+                    "Data Object Module",
+                    "Document Object Module",
+                    "Data-Oriented Model"
+                ],
+                correct: 0
+            },
+            {
+                question: "Which HTML tag is used to define a JavaScript?",
+                options: [
+                    "<script>",
+                    "<js>",
+                    "<javascript>",
+                    "<code>"
+                ],
+                correct: 0
+            }
+        ];
+
+        const quizContainer = document.getElementById("quiz");
+        const retryButton = document.getElementById("retry");
+
+        let currentQuestion = 0;
+        let score = 0;
+
+        function loadQuiz() {
+            const currentQuiz = quizData[currentQuestion];
+
+            quizContainer.innerHTML = `
+                <div class="question">${currentQuiz.question}</div>
+                <ul class="answers">
+                    ${currentQuiz.options.map((option, index) => `<li><button onclick="selectAnswer(${index})">${option}</button></li>`).join("")}
+                </ul>
+            `;
+        }
+
+        function selectAnswer(selected) {
+            const correct = quizData[currentQuestion].correct;
+            if (selected === correct) {
+                score++;
+            }
+            currentQuestion++;
+            if (currentQuestion < quizData.length) {
+                loadQuiz();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            quizContainer.innerHTML = `
+                <div class="result">You scored <span>${score}</span> out of <span>${quizData.length}</span></div>
+            `;
+            retryButton.style.display = "block";
+        }
+
+        retryButton.addEventListener("click", () => {
+            currentQuestion = 0;
+            score = 0;
+            retryButton.style.display = "none";
+            loadQuiz();
+        });
+
+        loadQuiz();
+    </script>
+</body>
+</html>
